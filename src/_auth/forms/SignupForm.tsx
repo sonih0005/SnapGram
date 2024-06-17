@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,8 +15,10 @@ import { z } from "zod";
 import Loader from "@/components/Shared/Loader";
 import { Link } from "react-router-dom";
 import { createUserAccount } from "@/lib/Appwrite/api";
+import { useToast } from "@/components/ui/use-toast";
 
 const SignupForm = () => {
+  const { toast } = useToast();
   const isLoading = false;
   // 1. Define your form.
   const form = useForm<z.infer<typeof signupValidation>>({
@@ -32,12 +33,16 @@ const SignupForm = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof signupValidation>) {
-    const newUser = await createUserAccount(values)
-    console.log(newUser)
+    const newUser = await createUserAccount(values);
+    console.log(newUser);
 
-    if(!newUser) {
-      return ;
+    if (!newUser) {
+      return toast({
+        title: "Sign up failed, please try again"
+      });
     }
+
+    // const session = await signInAccount()
   }
 
   return (
@@ -123,7 +128,13 @@ const SignupForm = () => {
 
           <p className="text-small-regular text-light-2 text-center mt-2">
             Already have an Account
-            <Link to='/sign-in' className="text-primary-500 text-sm-semibold ml-1 italic underline"> Log in</Link>
+            <Link
+              to="/sign-in"
+              className="text-primary-500 text-sm-semibold ml-1 italic underline"
+            >
+              {" "}
+              Log in
+            </Link>
           </p>
         </form>
       </div>
