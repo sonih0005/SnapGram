@@ -149,7 +149,6 @@ const SignupForm = () => {
               to="/sign-in"
               className="text-primary-500 text-sm-semibold ml-1 italic underline"
             >
-              {" "}
               Log in
             </Link>
           </p>
