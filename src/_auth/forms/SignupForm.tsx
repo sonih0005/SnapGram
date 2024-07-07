@@ -19,14 +19,18 @@ import {
   useCreateUserAccount,
   useSignInAccount,
 } from "@/lib/react-query/queriesAndMutations";
+import { useUserContext } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const SignupForm = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
 
-  const { mutateAsync: createUserAccount, isLoading: isCreatingUser } =
+  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
     useCreateUserAccount();
 
-  const { mutateAsync: signInAccount, isLoading: isSigningIn } =
+  const { mutateAsync: signInAccount, isPending: isSigningIn } =
     useSignInAccount();
 
   // 1. Define your form.
@@ -57,6 +61,15 @@ const SignupForm = () => {
     })
     if(!session) {
       return toast({title: 'Sign in failed, Please try again'})
+    }
+    
+    const isLoggedIn = await checkAuthUser()
+
+    if(isLoggedIn){
+      form.reset();
+      navigate('/')
+    }else{
+      return toast({title: 'sign in failed, Please try again'})
     }
 
     
@@ -134,7 +147,7 @@ const SignupForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {isCreatingUser ? (
+            {isCreatingAccount ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>
