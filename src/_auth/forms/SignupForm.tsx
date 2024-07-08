@@ -51,7 +51,7 @@ const SignupForm = () => {
 
     if (!newUser) {
       return toast({
-        title: "Sign up failed, please try again",
+        title: "Sign up failed, please try again or already have an account",
       });
     }
 
@@ -60,7 +60,7 @@ const SignupForm = () => {
       password: values.password
     })
     if(!session) {
-      return toast({title: 'Sign in failed, Please try again'})
+      return toast({title: 'Sign in failed, Please try again or already have an account'})
     }
     
     const isLoggedIn = await checkAuthUser()
