@@ -1,3 +1,5 @@
+import { Link, useNavigate } from "react-router-dom";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -10,28 +12,27 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signinValidation as signinValidation } from "@/lib/Validation";
-import { z } from "zod";
+
+// import { z } from "zod";
 import Loader from "@/components/Shared/Loader";
-import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import {
   useSignInAccount,
 } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { SigninValidation } from "@/lib/Validation";
 
 const SigninForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
 
-  const { mutateAsync: signInAccount, isPending } =
+  const { mutateAsync: signInAccount} =
     useSignInAccount();
 
   // 1. Define your form.
-  const form = useForm<z.infer<typeof signinValidation>>({
-    resolver: zodResolver(signinValidation),
+  const form = useForm<z.infer<typeof SigninValidation>>({
+    resolver: zodResolver(SigninValidation),
     defaultValues: {
       email: "",
       password: "",
@@ -39,11 +40,12 @@ const SigninForm = () => {
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof signinValidation>) {
+  async function onSubmit(values: z.infer<typeof SigninValidation>) {
     const session = await signInAccount({
       email: values.email,
       password: values.password
     })
+    
     if(!session) {
       return toast({title: 'Sign in failed, Please try again or already have an account'})
     }
