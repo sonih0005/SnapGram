@@ -2,6 +2,7 @@ import { INewPost, INewUser } from "@/types";
 import { ID, ImageGravity, Query } from "appwrite";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 
+
 export async function createUserAccount(user: INewUser) {
   try {
     const newAccount = await account.create(
@@ -96,8 +97,10 @@ export async function createPost(post : INewPost) {
 
     if(!uploadedFile) throw Error
     //get file url
-    const fileUrl = getFilePreview(uploadedFile.$id)
-
+    const fileUrl = await getFilePreview(uploadedFile.$id)
+    fileUrl?.toString();
+    console.log(fileUrl)
+   
     if(!fileUrl) {
       await deleteFile(uploadedFile.$id)
       throw Error;
@@ -148,7 +151,7 @@ export async function uploadFile(file: File){
 
 export async function getFilePreview(fileId: string){
   try {
-    const fileUrl = await storage.getFilePreview(
+    const fileUrl =  storage.getFilePreview(
       appwriteConfig.storageId,
       fileId,
       2000,
@@ -156,6 +159,8 @@ export async function getFilePreview(fileId: string){
       ImageGravity.Top,
       100,
     )
+    if(!fileUrl) throw Error;
+
     return fileUrl;
   } catch (error) {
     console.log(error)
