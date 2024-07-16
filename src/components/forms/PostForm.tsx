@@ -103,7 +103,7 @@ const PostForm = ({post}: PostFormProps) => {
             <FormItem>
               <FormLabel className="shad-form_label">Add Location</FormLabel>
               <FormControl>
-                <Input type="text" className="shad-input" {...post}/>
+                <Input type="text" className="shad-input" {...field}/>
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
