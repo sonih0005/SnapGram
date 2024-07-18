@@ -30,3 +30,7 @@ export function timeAgo(dateString: string): string {
 
   return 'just now';
 }
+
+export function checkIsLiked (likeList: string[], userId: string)  {
+  return likeList.includes(userId);
+}
