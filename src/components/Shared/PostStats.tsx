@@ -26,6 +26,13 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
 
   const { data: currentUser } = useGetCurrentUser();
 
+  const savedPostRecord = currentUser?.save.find((record: Models.Document) => record.post.$id === post.$id);
+
+  useEffect(() => {
+    setIsSaved(savedPostRecord ? true : false);
+    // setIsSaved(!!savedPostRecord) we also use this method
+  }, [currentUser])
+
   const handleLikePost = (e: React.MouseEvent) => {
     e.stopPropagation();
 
@@ -45,15 +52,16 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const handleSavePost = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    const savedPostRecord = currentUser?.save.find((record: Models.Document) => record.$id === post.$id);
+    
 
     if(savedPostRecord){
         setIsSaved(false);
-        deleteSavedPost(savedPostRecord.$id);
-    }else {
-        savePost({postId: post.$id, userId});
-        setIsSaved(true);
+       return deleteSavedPost(savedPostRecord.$id);
+    } else {
+      savePost({postId: post.$id, userId});
+      setIsSaved(true);
     }
+    
   };
 
   return (
