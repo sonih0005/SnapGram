@@ -7,6 +7,7 @@ import {
 } from "@/lib/react-query/queriesAndMutations";
 import { checkIsLiked } from "@/lib/utils";
 import { Models } from "appwrite";
+import Loader from "./Loader";
 
 
 type PostStatsProps = {
@@ -21,8 +22,8 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const [isSaved, setIsSaved] = useState(false);
 
   const { mutate: likePost } = useLikePost();
-  const { mutate: savePost } = useSavePost();
-  const { mutate: deleteSavedPost } = useDeleteSavedPost();
+  const { mutate: savePost, isPending: isSavingPost } = useSavePost();
+  const { mutate: deleteSavedPost, isPending: isDeletingSaved } = useDeleteSavedPost();
 
   const { data: currentUser } = useGetCurrentUser();
 
@@ -31,7 +32,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   useEffect(() => {
     setIsSaved(savedPostRecord ? true : false);
     // setIsSaved(!!savedPostRecord) we also use this method
-  }, [currentUser])
+  }, [currentUser, savedPostRecord])
 
   const handleLikePost = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -83,14 +84,14 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
       </div>
 
       <div className="flex gap-2">
-        <img
+       {isSavingPost || isDeletingSaved ? <Loader /> : <img
           src={isSaved ? "/assets/icons/saved.svg" : "/assets/icons/save.svg"}
           alt="like-icon"
           width={20}
           height={20}
           className="cursor-pointer"
           onClick={handleSavePost}
-        />
+        />}
       </div>
     </div>
   );
