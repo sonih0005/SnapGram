@@ -18,17 +18,21 @@ import { Models } from "appwrite";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "@/context/AuthContext";
 import { toast } from "../ui/use-toast";
-import { useCreatePost } from "@/lib/react-query/queriesAndMutations";
+import { useCreatePost, useDeletePost, useUpdatePost } from "@/lib/react-query/queriesAndMutations";
+
 
 type PostFormProps = {
   post?: Models.Document;
-  action: "create" | "Update";
+  action: "Create" | "Update";
 }
 
 const PostForm = ({post, action}: PostFormProps) => {
   const navigate = useNavigate();
 
   const {mutateAsync: createPost, isPending: isLoadingCreate} = useCreatePost();
+  const {mutateAsync: updatePost, isPending: isLoadingUpdate} = useUpdatePost();
+  const {mutateAsync: deletePost, isPending: isLoadingDelete} = useDeletePost();
+
   const {user} = useUserContext();
 
   // 1. Define your form.
@@ -44,6 +48,15 @@ const PostForm = ({post, action}: PostFormProps) => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof PostValidation>) {
+    if(post && action === 'Update'){
+      const updatedPost = await updatePost({
+        ...values,
+        postId: post.$id,
+        imageId: post?.imageId,
+        imageUrl: post?.imageUrl
+      })
+    }
+
    const newPost = await createPost({
     ...values,
     userId: user.id
