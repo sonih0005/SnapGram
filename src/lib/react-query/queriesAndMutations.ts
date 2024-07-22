@@ -151,3 +151,5 @@ export const useDeletePost = () => {
         }
     })
 }
+
+export const useGetUserPosts = (userId: string) => {}
