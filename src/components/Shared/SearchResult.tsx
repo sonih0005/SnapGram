@@ -1,7 +1,22 @@
+import { Models } from "appwrite"
+import Loader from "./Loader"
+import GridPostList from "./GridPostList"
 
-const SearchResult = () => {
+type searchResultsProps = {
+  isSearchFetching: boolean;
+  searchedPosts: Models.Document[];
+}
+
+const SearchResult = ({isSearchFetching, searchedPosts}:searchResultsProps ) => {
+  if(isSearchFetching) return <Loader />
+
+  if(searchedPosts && searchedPosts.documents.length > 0) 
+    return (
+    <GridPostList posts={searchedPosts.documents}/>
+  )
+
   return (
-    <div>SearchResult</div>
+    <p className="text-light-4 mt-10 text-center w-full">No result found</p>
   )
 }
 
