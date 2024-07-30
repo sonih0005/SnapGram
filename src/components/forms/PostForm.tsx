@@ -18,7 +18,7 @@ import { Models } from "appwrite";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "@/context/AuthContext";
 import { toast } from "../ui/use-toast";
-import { useCreatePost, useDeletePost, useUpdatePost } from "@/lib/react-query/queriesAndMutations";
+import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutations";
 
 
 type PostFormProps = {
@@ -31,7 +31,7 @@ const PostForm = ({post, action}: PostFormProps) => {
 
   const {mutateAsync: createPost, isPending: isLoadingCreate} = useCreatePost();
   const {mutateAsync: updatePost, isPending: isLoadingUpdate} = useUpdatePost();
-  const {mutateAsync: deletePost, isPending: isLoadingDelete} = useDeletePost();
+  // const {mutateAsync: deletePost, isPending: isLoadingDelete} = useDeletePost();
 
   const {user} = useUserContext();
 
